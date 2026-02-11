@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,48 +9,57 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
-        body { 
-            font-family: 'Noto Sans TC', sans-serif; 
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
             /* 讓背景顏色與 Header 融合，減少視覺斷層 */
-            background-color: #ffffff; 
+            background-color: #ffffff;
         }
+
         /* 針對行動端微調：隱藏滾動條 */
-        ::-webkit-scrollbar { display: none; }
-        
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
         /* 自定義檔案上傳按鈕樣式 */
-        .custom-file-upload { 
-            display: inline-block; 
-            padding: 16px; 
-            cursor: pointer; 
-            background: #f8fafc; 
-            border: 2px dashed #cbd5e1; 
-            border-radius: 16px; 
-            width: 100%; 
-            text-align: center; 
-            transition: all 0.3s; 
+        .custom-file-upload {
+            display: inline-block;
+            padding: 16px;
+            cursor: pointer;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s;
         }
     </style>
 </head>
+
 <body class="bg-white md:bg-slate-100 min-h-screen flex items-start justify-center">
 
-    <div class="w-full max-w-md bg-white min-h-screen md:min-h-0 md:my-8 md:rounded-[2.5rem] md:shadow-2xl overflow-hidden flex flex-col">
-        
-        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 pt-12 pb-10 text-white text-center relative shadow-lg">
+    <div
+        class="w-full max-w-md bg-white min-h-screen md:min-h-0 md:my-8 md:rounded-[2.5rem] md:shadow-2xl overflow-hidden flex flex-col">
+
+        <div
+            class="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 pt-12 pb-10 text-white text-center relative shadow-lg">
             <div class="absolute top-6 right-8 opacity-20 text-5xl"><i class="fas fa-plane"></i></div>
             <h1 class="text-3xl font-bold tracking-tight">旅遊記帳</h1>
             <p class="text-blue-100 text-sm mt-2 font-light tracking-widest">TRAVEL EXPENSE</p>
         </div>
 
         <form id="expenseForm" class="flex-grow p-6 md:p-8 space-y-6">
-            
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">日期</label>
-                    <input type="date" id="date" required class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
+                    <input type="date" id="date" required
+                        class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">方式</label>
-                    <select id="payment" class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition appearance-none text-gray-700">
+                    <select id="payment"
+                        class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition appearance-none text-gray-700">
                         <option value="泰國帳戶">泰國帳戶</option>
                         <option value="現金">現金</option>
                         <option value="信用卡">信用卡</option>
@@ -58,18 +67,21 @@
                         <option value="其他">其他</option>
                     </select>
                 </div>
-                <div>
-        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">付款人</label>
-        <select id="payer" class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition appearance-none text-gray-700">
-            <option value="MARK">MARK</option>
-            <option value="AELX">ALEX</option>
-        </select>
-    </div>
             </div>
 
             <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">付款人</label>
+                    <select id="payer"
+                        class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition appearance-none text-gray-700">
+                        <option value="MARK">MARK</option>
+                        <option value="AELX">ALEX</option>
+                    </select>
+                </div>
+            
+            <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">類別</label>
-                <select id="category" class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
+                <select id="category"
+                    class="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition text-gray-700">
                     <option value="🍽️ 餐飲">🍽️ 餐飲</option>
                     <option value="🚗 交通">🚗 交通</option>
                     <option value="🏨 住宿">🏨 住宿</option>
@@ -81,23 +93,26 @@
 
             <div class="space-y-4">
                 <div class="group">
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1 font-semibold">項目</label>
-                    <input type="text" id="item" placeholder="在做什麼？" required 
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1 font-semibold">項目</label>
+                    <input type="text" id="item" placeholder="在做什麼？" required
                         class="w-full px-4 py-4 bg-gray-50 border-b-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 outline-none transition text-lg shadow-sm">
                 </div>
-                
+
                 <div class="group">
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1 font-semibold">金額</label>
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1 font-semibold">金額</label>
                     <div class="relative">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-blue-300 font-bold text-xl">$</span>
-                        <input type="number" id="amount" placeholder="0" required 
+                        <input type="number" id="amount" placeholder="0" required
                             class="w-full pl-10 pr-4 py-4 bg-gray-50 border-b-2 border-transparent rounded-2xl focus:bg-white focus:border-blue-500 outline-none transition text-2xl font-bold text-blue-600 shadow-sm">
                     </div>
                 </div>
             </div>
 
             <div id="imagePreviewContainer" class="hidden animate-pulse">
-                <img id="imagePreview" src="#" class="w-full h-52 object-cover rounded-2xl shadow-inner border border-gray-100">
+                <img id="imagePreview" src="#"
+                    class="w-full h-52 object-cover rounded-2xl shadow-inner border border-gray-100">
             </div>
 
             <div>
@@ -109,7 +124,8 @@
             </div>
 
             <div class="pt-4 pb-8">
-                <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold py-5 rounded-[1.5rem] hover:bg-blue-700 active:scale-[0.96] transition-all shadow-xl shadow-blue-100 text-xl tracking-widest">
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-blue-600 text-white font-bold py-5 rounded-[1.5rem] hover:bg-blue-700 active:scale-[0.96] transition-all shadow-xl shadow-blue-100 text-xl tracking-widest">
                     確認送出
                 </button>
                 <p id="status" class="text-center text-sm font-medium mt-4 hidden"></p>
@@ -127,11 +143,11 @@
         const previewContainer = document.getElementById('imagePreviewContainer');
         const fileLabel = document.getElementById('fileLabel');
 
-        photoInput.addEventListener('change', function() {
+        photoInput.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     previewImg.src = e.target.result;
                     previewContainer.classList.remove('hidden');
                     previewContainer.classList.remove('animate-pulse');
@@ -142,11 +158,11 @@
             }
         });
 
-        document.getElementById('expenseForm').addEventListener('submit', async function(e) {
+        document.getElementById('expenseForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const status = document.getElementById('status');
-            
+
             btn.disabled = true;
             btn.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-2"></i> 上傳中`;
             status.textContent = '請稍候...';
@@ -183,7 +199,7 @@
 
                 status.innerHTML = `<i class="fas fa-check-circle mr-1"></i> 已儲存至 Google 試算表`;
                 status.className = 'text-center text-sm font-medium mt-4 text-green-600';
-                
+
                 document.getElementById('expenseForm').reset();
                 document.getElementById('date').valueAsDate = new Date();
                 previewContainer.classList.add('hidden');
@@ -200,4 +216,5 @@
         });
     </script>
 </body>
+
 </html>
