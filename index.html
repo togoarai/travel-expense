@@ -3,34 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅遊記帳系統 - v0.1.1</title>
+    <title>旅遊記帳系統 - v0.2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 針對行動裝置優化，讓點擊輸入框時不會縮放太厲害 */
         input, select { font-size: 16px !important; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
-        
         <div class="bg-blue-600 p-6 text-white text-center">
             <h1 class="text-2xl font-bold tracking-wide">🌍 旅遊記帳助手</h1>
-            <p class="text-blue-100 text-sm mt-1">記錄每一趟旅程的點滴</p>
+            <p class="text-blue-100 text-sm mt-1">資料將同步至 Google 試算表</p>
         </div>
 
         <form id="expenseForm" class="p-6 space-y-5">
-            
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">消費日期</label>
-                <input type="date" id="date" required 
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <input type="date" id="date" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
             </div>
 
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">消費類別</label>
-                <select id="category" 
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-white">
+                <select id="category" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-white">
                     <option value="🍽️ 餐飲">🍽️ 餐飲</option>
                     <option value="🚗 交通">🚗 交通</option>
                     <option value="🏨 住宿">🏨 住宿</option>
@@ -42,24 +37,20 @@
 
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">消費項目</label>
-                <input type="text" id="item" placeholder="例如：曼谷建興酒家" required 
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <input type="text" id="item" placeholder="例如：曼谷建興酒家" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
             </div>
 
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">消費金額</label>
-                <input type="number" id="amount" placeholder="輸入金額" required 
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <input type="number" id="amount" placeholder="輸入金額" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
             </div>
 
             <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">上傳圖片 (收據或美照)</label>
-                <input type="file" id="photo" accept="image/*" 
-                    class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                <label class="block text-sm font-semibold text-gray-600 mb-1">上傳圖片</label>
+                <input type="file" id="photo" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
             </div>
 
-            <button type="submit" id="submitBtn"
-                class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 active:transform active:scale-95 transition-all shadow-lg shadow-blue-200">
+            <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 active:transform active:scale-95 transition-all shadow-lg shadow-blue-200">
                 🚀 儲存到 Google 試算表
             </button>
 
@@ -68,20 +59,39 @@
     </div>
 
     <script>
-        // 設定今天日期為預設值
+        // 【關鍵步驟】請將下方的網址替換成您的部署網址
+        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxFTjjCO16PTs8qm0fxSI3whb5z2-dRrHRzVsVdPVcHh7ZkxXNHvR3KwRzTZQPYYO28/exec';
+
         document.getElementById('date').valueAsDate = new Date();
 
-        // 監聽表單送出事件
-        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+        document.getElementById('expenseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('submitBtn');
             const status = document.getElementById('status');
-            status.textContent = '⌛ 正在處理資料中...';
+            const fileInput = document.getElementById('photo');
+
+            // 禁用按鈕防止重複提交
+            btn.disabled = true;
+            btn.textContent = '⏳ 資料上傳中...';
+            status.textContent = '正在處理並上傳照片，請稍候...';
             status.className = 'text-center text-sm font-medium mt-2 text-blue-600';
             status.classList.remove('hidden');
 
-            // 這裡暫存邏輯：我們將在下一個回覆撰寫 JS 讀取檔案並傳送到 GAS
-            console.log('表單已觸發，準備傳送資料');
-        });
-    </script>
-</body>
-</html>
+            // 讀取資料
+            const data = {
+                date: document.getElementById('date').value,
+                category: document.getElementById('category').value,
+                item: document.getElementById('item').value,
+                amount: document.getElementById('amount').value,
+                imageName: '',
+                imageBlob: null
+            };
+
+            // 處理檔案讀取 (轉為 Base64)
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                data.imageName = file.name;
+                data.imageBlob = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.
