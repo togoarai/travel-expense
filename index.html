@@ -60,7 +60,7 @@
 
     <script>
         // 【關鍵步驟】請將下方的網址替換成您的部署網址
-        const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxFTjjCO16PTs8qm0fxSI3whb5z2-dRrHRzVsVdPVcHh7ZkxXNHvR3KwRzTZQPYYO28/exec';
+        const GAS_WEB_APP_URL = '您的_GOOGLE_APPS_SCRIPT_網址_在此';
 
         document.getElementById('date').valueAsDate = new Date();
 
@@ -94,4 +94,33 @@
                 data.imageBlob = await new Promise((resolve) => {
                     const reader = new FileReader();
                     reader.onload = () => resolve(reader.result);
-                    reader.
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // 發送資料到 Google Apps Script
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // 由於 CORS 限制，GAS 常用 no-cors
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                // 顯示成功訊息
+                status.textContent = '✅ 記帳成功！資料已同步。';
+                status.className = 'text-center text-sm font-medium mt-2 text-green-600';
+                document.getElementById('expenseForm').reset();
+                document.getElementById('date').valueAsDate = new Date();
+            } catch (error) {
+                status.textContent = '❌ 發生錯誤，請稍後再試。';
+                status.className = 'text-center text-sm font-medium mt-2 text-red-600';
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 儲存到 Google 試算表';
+            }
+        });
+    </script>
+</body>
+</html>
