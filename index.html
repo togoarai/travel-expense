@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅遊記帳系統 - v0.2.0</title>
+    <title>旅遊記帳系統 - v0.3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         input, select { font-size: 16px !important; }
@@ -14,7 +14,7 @@
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
         <div class="bg-blue-600 p-6 text-white text-center">
             <h1 class="text-2xl font-bold tracking-wide">🌍 旅遊記帳助手</h1>
-            <p class="text-blue-100 text-sm mt-1">資料將同步至 Google 試算表</p>
+            <p class="text-blue-100 text-sm mt-1">v0.3.0 - 已新增付款方式欄位</p>
         </div>
 
         <form id="expenseForm" class="p-6 space-y-5">
@@ -37,12 +37,22 @@
 
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">消費項目</label>
-                <input type="text" id="item" placeholder="例如：曼谷建興酒家" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <input type="text" id="item" placeholder="例如：泰式餐館" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
             </div>
 
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">消費金額</label>
                 <input type="number" id="amount" placeholder="輸入金額" required class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1">付款方式</label>
+                <select id="payment" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-white">
+                    <option value="現金">💵 現金</option>
+                    <option value="信用卡">💳 信用卡</option>
+                    <option value="行動支付">📱 行動支付</option>
+                    <option value="其他">🌀 其他</option>
+                </select>
             </div>
 
             <div>
@@ -59,7 +69,6 @@
     </div>
 
     <script>
-        // 【關鍵步驟】請將下方的網址替換成您的部署網址
         const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxFTjjCO16PTs8qm0fxSI3whb5z2-dRrHRzVsVdPVcHh7ZkxXNHvR3KwRzTZQPYYO28/exec';
 
         document.getElementById('date').valueAsDate = new Date();
@@ -70,24 +79,22 @@
             const status = document.getElementById('status');
             const fileInput = document.getElementById('photo');
 
-            // 禁用按鈕防止重複提交
             btn.disabled = true;
             btn.textContent = '⏳ 資料上傳中...';
-            status.textContent = '正在處理並上傳照片，請稍候...';
+            status.textContent = '正在處理並上傳資料...';
             status.className = 'text-center text-sm font-medium mt-2 text-blue-600';
             status.classList.remove('hidden');
 
-            // 讀取資料
             const data = {
                 date: document.getElementById('date').value,
                 category: document.getElementById('category').value,
                 item: document.getElementById('item').value,
                 amount: document.getElementById('amount').value,
+                payment: document.getElementById('payment').value,
                 imageName: '',
                 imageBlob: null
             };
 
-            // 處理檔案讀取 (轉為 Base64)
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 data.imageName = file.name;
@@ -98,24 +105,21 @@
                 });
             }
 
-            // 發送資料到 Google Apps Script
             try {
-                const response = await fetch(GAS_WEB_APP_URL, {
+                await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // 由於 CORS 限制，GAS 常用 no-cors
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
-                // 顯示成功訊息
-                status.textContent = '✅ 記帳成功！資料已同步。';
+                status.textContent = '✅ 記帳成功！';
                 status.className = 'text-center text-sm font-medium mt-2 text-green-600';
                 document.getElementById('expenseForm').reset();
                 document.getElementById('date').valueAsDate = new Date();
             } catch (error) {
-                status.textContent = '❌ 發生錯誤，請稍後再試。';
+                status.textContent = '❌ 錯誤，請檢查網路。';
                 status.className = 'text-center text-sm font-medium mt-2 text-red-600';
-                console.error(error);
             } finally {
                 btn.disabled = false;
                 btn.textContent = '🚀 儲存到 Google 試算表';
